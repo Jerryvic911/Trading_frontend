@@ -2,8 +2,18 @@
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [data, setData] = useState(null);
-  const [history, setHistory] = useState<unknown[]>([]);
+  interface Signal {
+    pair: string;
+    signal: "CALL" | "PUT";
+    score: number;
+  }
+
+  interface HistoryItem extends Signal {
+    time: string;
+  }
+
+  const [data, setData] = useState<Signal | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchSignal = async () => {
@@ -35,7 +45,7 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const getColor = (signal) => {
+  const getColor = (signal: string): string => {
     if (signal === "CALL") return "text-green-500";
     if (signal === "PUT") return "text-red-500";
     return "text-gray-500";
